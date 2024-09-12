@@ -1,85 +1,43 @@
-/*-------------------------------- Constants --------------------------------*/
-const buttons = document.querySelectorAll('.button');
-const calculator = document.querySelector('#calculator');
-const operator = document.querySelectorAll('.operator')
+const numbers = document.querySelectorAll('.number');
+const equals = document.querySelector('.equals');
+const operators = document.querySelectorAll('.operator')
 const display = document.querySelector('.display')
-/*-------------------------------- Variables --------------------------------*/
-let calcDisplay; 
-let num1;
-let num2;
-let operation;
-/*------------------------ Cached Element References ------------------------*/
 
-/*----------------------------- Event Listeners -----------------------------*/
-let updateDisplay = (value) => {
-    display.innerText = value
+let lastOperator = false; 
+
+numbers.forEach(elem => {
+    elem.addEventListener("click", () => {
+let keypadValue = elem.textContent;
+let displayValue = display.innerText;
+lastOperator = false
+
+if (displayValue === "0") {
+    display.innerText = keypadValue
+} else {
+    display.innerText += keypadValue
 }
-
-calculator.addEventListener('click', (event) => {
-    // console.dir(event.target.innerText);
-    if (event.target.classList.contains('number')) {
-        if (!num1) {
-            num1 = parseInt(event.target.innerText)
-        } else if (!num2) {
-            num2 = parseInt(event.target.innerText)
-        }
-        calcDisplay += event.target.innerText
-        updateDisplay(`${event.target.innerText}`)
-    } else if (event.target.innerText === '+') {
-        operation = "add"
-    } else if (event.target.innerText === '-'){
-        operation = "subtract"
-    } else if (event.target.innerText === '/') {
-          operation = "divide"
-    } else if (event.target.innerText === '*') {
-          operation = "multiply"
-    } else if (event.target.innerText === "=") {
-        if (num1 & num2) {
-            if (operation === "add") {
-                addPlus(num1, num2)
-            } else if (operation === "subtract") {
-                subTract(num1, num2)
-            } else if (operation === "divide") {
-                diVide(num1, num2)
-            } else if (operation === "multiply") {
-                mltIply(num1, num2)
-            }
-        }
-    } else if (event.target.innerText === "C") {
-        clearBut()
-    }
+    })
 });
-  
-// buttons.forEach ((button) => {
-//     button.addEventListener('click', (event) => {
-//         calcDisplay += event.target.innerText
-//         console.log(calcDisplay)
-//     })
-// })
 
-/*-------------------------------- Functions --------------------------------*/
+function reset() {
+    display.innerText = "";
+    lastOperator = false; 
+};
 
-const addPlus = (num1, num2) => {
-    let sum = num1 + num2
-    updateDisplay(sum)
-}
+operators.forEach(elem => {
+    elem.addEventListener("click", () => {
+        let operator = elem.textContent
 
-const subTract = (num1, num2) => {
-    let tra =  num1 - num2
-    updateDisplay(tra)
-    // console.log(tra)
-}
+        if (operator === "C") {
+            reset() 
+        } else if (lastOperator == false) {
+            display.innerText += operator;
+            lastOperator = true; 
+        }
+    })
+})
 
-const diVide = (num1, num2) =>  {
-    let vide = num1 / num2 
-    updateDisplay(vide)
-}
+equals.addEventListener("click", () => {
+    display.innerText = eval(display.textContent)
+})
 
-const mltIply = (num1, num2) => {
-    let tiply = num1 * num2
-    updateDisplay(tiply)
-}
-const clearBut = () => {
-    calcDisplay = ""
-    updateDisplay(calcDisplay)
-}
